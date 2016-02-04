@@ -1,0 +1,8 @@
+-d COM1 -s 19200,N,8,1 "+++" -n 1
+-d COM1 -s 19200,N,8,1 "AT+CGMM\r" -n 1 -f +1
+-d COM1 -s 19200,N,8,1 "AT+CGMI\r" -n 1 -f +2
+-d COM1 -s 19200,N,8,1 "AT+CGMR\r" -n 1 -f +3
+-d COM1 -s 19200,N,8,1 "AT+CGSN\r" -n 1 -f +4
+-d COM1 -s 19200,N,8,1 "AT&V\r" -n 1 -f +5
+-d COM1 -s 19200,N,8,1 "ATE1QV1&Y?&V^ID?^RUP?+SBDDSC?^UE?\r" -n 1 -f +6
+-d COM1 -s 19200,N,8,1 -r -es 0x0a

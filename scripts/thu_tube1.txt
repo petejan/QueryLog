@@ -1,0 +1,26 @@
+; EFM Acceptance testing
+;
+; GPIB 6 is the fridge
+
+;
+; fridge
+;
+; start
+-a 6 -es 0x0a R00000001 -c -r -n 1
+; set temperatures 0, 10, 20, 30
+-a 6 -es 0x0a U11000 -c -r -p 24:00:00
+-a 6 -es 0x0a U11100 -c -r -p 24:00:00 -f +2:0:0
+-a 6 -es 0x0a U11200 -c -r -p 24:00:00 -f +4:0:0
+-a 6 -es 0x0a U11300 -c -r -p 24:00:00 -f +6:0:0
+-a 6 -es 0x0a U11200 -c -r -p 24:00:00 -f +8:0:0
+-a 6 -es 0x0a U11100 -c -r -p 24:00:00 -f +10:0:0
+-a 6 -es 0x0a U11000 -c -r -p 24:00:00 -f +12:0:0
+
+
+; set to 20 deg at end
+-a 6 -es 0x0a U11200 -c -r -n 1 -f +14:0:0
+
+; stop the fridge
+-a 6 -es 0x0a R00000000 -c -r -n 1 -f +15:0:0
+
+

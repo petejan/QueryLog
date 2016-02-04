@@ -1,0 +1,8 @@
+-d /dev/ttyS1 -s 9600,N,8,1 -p 1:0 "\\x1A\\x1A\\x1A" -r -es 0x3e
+-d /dev/ttyS1 -s 9600,N,8,1 -p 1:0 "cd ..\\n" -r -es 0x3e
+-d /dev/ttyS1 -s 9600,N,8,1 -p 1:0 "md dom-%d\\n" -r -es 0x3e
+-d /dev/ttyS1 -s 9600,N,8,1 -p 1:0 "cd dom-%d\\n" -r -es 0x3e
+-d /dev/ttyS1 -s 9600,N,8,1 -p 1:0 "new hour-%H.log\\n" -es 0x3e -r
+-d /dev/ttyS1 -s 9600,N,8,1 -p 1:0 "append hour-%H.log\\n" -es 0x3c -r
+-d /dev/ttyS1 -s 9600,N,8,1 -p 1 "OpenLogTest-%Y%m%d-%H%M%S\\r\\n"
+-d /dev/ttyS1 -s 9600,N,8,1 -r -es 0x0a

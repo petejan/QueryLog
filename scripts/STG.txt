@@ -1,0 +1,6 @@
+;
+; Log the serial Ports
+;
+-d /dev/ttyS14 -s 19200,n,8,1 -r -es 0x0a -q 1000 -m "$0004Q,CFG,5" -n 1
+-d /dev/ttyS14 -s 19200,n,8,1 -r -es 0x0a -q 1000 -m
+;

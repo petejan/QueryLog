@@ -1,0 +1,8 @@
+-a 22 -r "*IDN?" -n 1
+;
+-a 22 "CONF:CURR:DC 3" -n 1
+-a 22 "CURR:NPLC 10" -n 1
+;
+-a 22 -r "READ?"
+;
+-d COM1 -s 19200,N,8,1 -r -es 0x0a 

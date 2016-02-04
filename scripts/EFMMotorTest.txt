@@ -1,0 +1,70 @@
+; Script to read the EFM, and multimeter temperature, current
+;
+; GPIB 6 is the fridge
+; GPIB 9 is scanner (multimeter)
+; GPIB 8 is DC power supply
+;
+;
+-d COM1 -s 19200,N,8,1 -r -es 0x0a -p 10 $PCESQ,ALL\r -q 1000
+-d COM1 -s 19200,N,8,1 -r -es 0x0a -n 1 $PCESQ,SER\r -q 1000
+-d COM1 -s 19200,N,8,1 -r -es 0x0a -n 1 $PCERQ,SER\r -q 2000
+-d COM1 -s 19200,N,8,1 -r -es 0x0a -p 1:0 $PCERQ,CAL,0\r -q 2000
+-d COM1 -s 19200,N,8,1 -r -es 0x0a -p 10:0 $PCESQ,CLR\r -q 1000
+-d COM1 -s 19200,N,8,1 -r -es 0x0a -p 10:0 $PCERQ,CLR\r -q 2000
+;
+; setup the scanner
+-a 9 *RST\n -n 1
+-a 9 *IDN?\n -n 1 -r
+-a 9 "CONF:TEMP FRTD, (@101)\n" -n 1
+;
+; 120 is DC volatge 100V range
+-a 9 "CONF:VOLT:DC (@120)\n" -n 1
+-a 9 "VOLT:DC:RANGE 100, (@120)\n" -n 1
+;
+; 121,122 is current 1A, 10 PLC
+-a 9 "CONF:CURR:DC (@121,122)\n" -n 1
+-a 9 "CURR:DC:RANGE 1, (@121,122)\n" -n 1
+-a 9 "CURR:DC:NPLC 10, (@121,122)\n" -n 1
+;
+-a 9 "ROUT:SCAN (@101,102,121)\n" -n 1
+;
+; monitor temperature channel 101
+-a 9 "ROUT:MON (@101)\n" -n 1
+-a 9 "ROUT:MON:STAT ON\n" -n 1
+;
+; read every 1 min
+-a 9 READ?\n -r -p 1:0
+;
+; fridge
+;
+; start
+;-a 6 -es 0x0a R00000001 -c -r -n 1
+; set temperatures
+;-a 6 -es 0x0a U11200 -c -r -n 3 -p 24:00:00
+;-a 6 -es 0x0a U11100 -c -r -n 3 -p 24:00:00 -f +2:0:0
+;-a 6 -es 0x0a U11000 -c -r -n 3 -p 24:00:00 -f +3:0:0
+;-a 6 -es 0x0a U10900 -c -r -n 3 -p 24:00:00 -f +4:0:0
+;-a 6 -es 0x0a U10800 -c -r -n 3 -p 24:00:00 -f +5:0:0
+;-a 6 -es 0x0a U10700 -c -r -n 3 -p 24:00:00 -f +6:0:0
+;-a 6 -es 0x0a U10600 -c -r -n 3 -p 24:00:00 -f +7:0:0
+;-a 6 -es 0x0a U10500 -c -r -n 3 -p 24:00:00 -f +8:0:0
+;-a 6 -es 0x0a U10400 -c -r -n 3 -p 24:00:00 -f +9:0:0
+;-a 6 -es 0x0a U10300 -c -r -n 3 -p 24:00:00 -f +10:0:0
+; step back up
+;-a 6 -es 0x0a U10400 -c -r -n 3 -p 24:00:00 -f +12:0:0
+;-a 6 -es 0x0a U10500 -c -r -n 3 -p 24:00:00 -f +13:0:0
+;-a 6 -es 0x0a U10600 -c -r -n 3 -p 24:00:00 -f +14:0:0
+;-a 6 -es 0x0a U10700 -c -r -n 3 -p 24:00:00 -f +15:0:0
+;-a 6 -es 0x0a U10800 -c -r -n 3 -p 24:00:00 -f +16:0:0
+;-a 6 -es 0x0a U10900 -c -r -n 3 -p 24:00:00 -f +17:0:0
+;-a 6 -es 0x0a U11000 -c -r -n 3 -p 24:00:00 -f +18:0:0
+;-a 6 -es 0x0a U11100 -c -r -n 3 -p 24:00:00 -f +19:0:0
+;-a 6 -es 0x0a U11200 -c -r -n 3 -p 24:00:00 -f +20:0:0
+;
+; stop the fridge
+;-a 6 -es 0x0a R00000000 -c -r -n 1 -f +96:0:0
+;
+;
+; Setup the power supply
+;-a 8 OUT1,0\n -n 1
+;-a 8 VSET1,12;ISET1,0.8;OCP1,1;OUT1,1\n -f +20 -n 1

@@ -1,0 +1,21 @@
+; Log the resistance 
+;
+; Kethily is GPIB(27)
+-a 27 *RST;*CLS\n -n 1
+-a 27 *IDN?\n -n 1 -r
+;-a 27 :SYST:PRE\r -n 1
+;
+-a 27 "RES:RANG\ 20e9\n" -n 1
+-a 27 "RES:NPLC\ 10\n" -n 1
+-a 27 "RES:MAN:VSO:RANG\ 100\n" -n 1
+-a 27 "RES:MAN:VSO:OPER\ ON\n" -n 1
+-a 27 ":SOUR:VOLT\ 40\n" -n 1
+;
+-a 27 "SYST:ZCH\ ON\n" -n 1 -p 1:0:0
+-a 27 "SYST:ZCH\ OFF\n" -n 1 -p 1:0:0 -f +20
+-a 27 ":CALC1:STAT\ 0\n" -n 1
+-a 27 ":FUNC\ 'RES'\n" -n 1
+;-a 27 "RES:AVER:STATE\ ON'\n" -n 1
+;-a 27 "RES:AVER:COUNT\ 10'\n" -n 1
+-a 27 ":FORM:ELEM\ READ\n" -n 1
+-a 27 "READ?\n" -r -p 10

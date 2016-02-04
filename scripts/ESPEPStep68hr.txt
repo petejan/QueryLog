@@ -1,0 +1,32 @@
+;
+; GPIB 7 is the ESPEC fridge
+;
+; set a 68 hr cycle, 9 4 hr steps from +20 to -40 then back
+;
+-a 7 -es 0x0a TEMP,S20\n  -c -r -n 1 -p 24:00:00
+-a 7 -es 0x0a TEMP,S10\n  -c -r -n 1 -p 24:00:00 -f  +4:0:0
+-a 7 -es 0x0a TEMP,S2\n   -c -r -n 1 -p 24:00:00 -f  +8:0:0
+-a 7 -es 0x0a TEMP,S0\n   -c -r -n 1 -p 24:00:00 -f +12:0:0
+-a 7 -es 0x0a TEMP,S-2\n  -c -r -n 1 -p 24:00:00 -f +16:0:0
+-a 7 -es 0x0a TEMP,S-10\n -c -r -n 1 -p 24:00:00 -f +20:0:0
+-a 7 -es 0x0a TEMP,S-20\n -c -r -n 1 -p 24:00:00 -f +24:0:0
+-a 7 -es 0x0a TEMP,S-30\n -c -r -n 1 -p 24:00:00 -f +28:0:0
+-a 7 -es 0x0a TEMP,S-40\n -c -r -n 1 -p 24:00:00 -f +32:0:0
+; step back up in temperature
+-a 7 -es 0x0a TEMP,S-30\n -c -r -n 1 -p 24:00:00 -f +36:0:0
+-a 7 -es 0x0a TEMP,S-20\n -c -r -n 1 -p 24:00:00 -f +40:0:0
+-a 7 -es 0x0a TEMP,S-10\n -c -r -n 1 -p 24:00:00 -f +44:0:0
+-a 7 -es 0x0a TEMP,S-2\n  -c -r -n 1 -p 24:00:00 -f +48:0:0
+-a 7 -es 0x0a TEMP,S0\n   -c -r -n 1 -p 24:00:00 -f +52:0:0
+-a 7 -es 0x0a TEMP,S2\n   -c -r -n 1 -p 24:00:00 -f +56:0:0
+-a 7 -es 0x0a TEMP,S10\n  -c -r -n 1 -p 24:00:00 -f +60:0:0
+-a 7 -es 0x0a TEMP,S20\n  -c -r -n 1 -p 24:00:00 -f +64:0:0
+;
+; Read the fridge
+-a 7 -es 0x0a TEMP?\n -c -r -p 60
+;
+; stop fridge
+-a 7 -es 0x0a MODE,STANDBY\n -c -r -n 1 -f +68:0:0
+;
+; start fridge
+-a 7 -es 0x0a MODE,CONSTANT\n -c -r -n 1

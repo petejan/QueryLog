@@ -1,0 +1,9 @@
+; set the ESPEC fridge time
+;
+-a 7 -c -es 0x0a -n 1 "TIME?\\n" -r -q 2000
+-a 7 -es 0x0a -n 1 "TIME, %H:%M:%S\\n" -r 
+-a 7 -es 0x0a -n 1 "TIME?\\n" -r 
+;
+-a 7 -es 0x0a -n 1 "DATE?\\n" -r
+-a 7 -es 0x0a -n 1 "DATE, %y.%m/%d. %a\\n" -r 
+-a 7 -es 0x0a -n 1 "DATE?\\n" -r 

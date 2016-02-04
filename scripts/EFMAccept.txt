@@ -1,0 +1,96 @@
+; EFM Acceptance testing
+;
+; GPIB 6 is the fridge
+; GPIB 9 is the scanning multimeter 4W RTD on channel 101
+; GPIB 8 is the DC power supply, Output 1 to EFM
+; GPIB 14 is the stanford-research high voltage PSU
+;
+;
+-d COM1 -s 19200,N,8,1 -r -es 0x0a SER\n -f +10 -n 1 -q 1000
+-d COM1 -s 19200,N,8,1 -r -es 0x0a VER\n -f +10 -n 1 -q 1000
+-d COM1 -s 19200,N,8,1 -r -es 0x0a RO\ SER\n -f +10 -n 1 -q 1000
+-d COM1 -s 19200,N,8,1 -r -es 0x0a RO\ VER\n -f +10 -n 1 -q 1000
+;
+; poll with the ALL command, every 10 sec
+-d COM1 -s 19200,N,8,1 -r -es 0x0a ALL\n -p 10 -q 1000 -f +3:0:0
+; clear every 60 sec
+-d COM1 -s 19200,N,8,1 -r -es 0x0a CLR\n -p 60 -q 1000 -f +3:0:0
+-d COM1 -s 19200,N,8,1 -r -es 0x0a RO\ CLR\n -p 60 -q 1000 -f +3:0:0
+;
+; setup the scanner
+-a 9 *RST\n -n 1
+-a 9 *IDN?\n -n 1 -r
+; channel 101 is the RTD
+-a 9 "CONF:TEMP FRTD, (@101)\n" -n 1
+; channel 102 is the current (voltage accross shunt)
+-a 9 "CONF:VOLT:DC (@102)\n" -n 1
+-a 9 "VOLT:DC:RANGE 0.1, (@102)\n" -n 1
+-a 9 "VOLT:DC:NPLC 10, (@102)\n" -n 1
+; scan 101 and 102
+-a 9 "ROUT:SCAN (@101,102)\n" -n 1
+; monitor channel 101, temperature
+-a 9 "ROUT:MON (@101)\n" -n 1
+-a 9 "ROUT:MON:STAT ON\n" -n 1
+; read every min
+-a 9 READ?\n -r -p 30
+;
+; fridge
+;
+; start
+-a 6 -es 0x0a R00000001 -c -r -n 1
+; set temperatures -30, -50, -80
+-a 6 -es 0x0a U10700 -c -r -p 24:00:00
+-a 6 -es 0x0a U10500 -c -r -p 24:00:00 -f +8:0:0
+-a 6 -es 0x0a U10200 -c -r -p 24:00:00 -f +16:0:0
+; stop the fridge
+-a 6 -es 0x0a U11200 -c -r -n 1 -f +48:0:0
+-a 6 -es 0x0a R00000000 -c -r -n 1 -f +50:0:0
+;
+; Setup the DC power supply
+-a 8 VSET1,12;ISET1,1.0;OCP1,0;OUT1,1\n -n 1
+-a 8 OUT1,1\n -n 1
+;
+-a 8 OUT1,1\n -p 8:0:0 -f +3:0:0
+-a 8 OUT1,0\n -p 8:0:0 -f +40
+;
+;-a 8 IOUT?1\n -p 1:0 -r
+;
+;
+; High voltage Power Supply
+-a 14 *RST\n -n 1
+-a 14 *IDN?\n -n 1 -r
+-a 14 HVON\n -f +2 -p 8:0:0
+-a 14 VOUT?\n -p 2:0 -f +3:0:0 -r
+-a 14 VOUT?\n -p 2:0 -f +3:0:20 -r
+; cycle voltage down/up
+-a 14 VSET350\n -p 8:0:0 -f +6:02:10
+-a 14 VSET325\n -p 8:0:0 -f +6:04:10
+-a 14 VSET300\n -p 8:0:0 -f +6:06:10
+-a 14 VSET275\n -p 8:0:0 -f +6:08:10
+-a 14 VSET250\n -p 8:0:0 -f +6:10:10
+-a 14 VSET225\n -p 8:0:0 -f +6:12:10
+-a 14 VSET200\n -p 8:0:0 -f +6:14:10
+-a 14 VSET175\n -p 8:0:0 -f +6:16:10
+-a 14 VSET150\n -p 8:0:0 -f +6:18:10
+-a 14 VSET125\n -p 8:0:0 -f +6:20:10
+-a 14 VSET100\n -p 8:0:0 -f +6:22:10
+-a 14 VSET75\n  -p 8:0:0 -f +6:24:10
+-a 14 VSET50\n  -p 8:0:0 -f +6:26:10
+-a 14 VSET25\n  -p 8:0:0 -f +6:28:10
+-a 14 VSET0\n   -p 8:0:0 -f +6:30:10
+-a 14 VSET25\n  -p 8:0:0 -f +6:32:10
+-a 14 VSET50\n  -p 8:0:0 -f +6:34:10
+-a 14 VSET75\n  -p 8:0:0 -f +6:36:10
+-a 14 VSET100\n -p 8:0:0 -f +6:38:10
+-a 14 VSET125\n -p 8:0:0 -f +6:40:10
+-a 14 VSET150\n -p 8:0:0 -f +6:42:10
+-a 14 VSET175\n -p 8:0:0 -f +6:44:10
+-a 14 VSET200\n -p 8:0:0 -f +6:46:10
+-a 14 VSET225\n -p 8:0:0 -f +6:48:10
+-a 14 VSET250\n -p 8:0:0 -f +6:50:10
+-a 14 VSET275\n -p 8:0:0 -f +6:52:10
+-a 14 VSET300\n -p 8:0:0 -f +6:54:10
+-a 14 VSET325\n -p 8:0:0 -f +6:56:10
+-a 14 VSET350\n -p 8:0:0 -f +6:58:10
+; finished, back to 0V
+-a 14 VSET0\n   -p 8:0:0 -f +7:00:10

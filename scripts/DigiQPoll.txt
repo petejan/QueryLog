@@ -1,0 +1,55 @@
+; DigiQuartz temperature cycle startup test
+;
+; Scanner, read temperature, current and voltage
+-a 9 *RST;*CLS\n -n 1
+-a 9 *IDN?\n -n 1 -r
+; configure the channels
+; 101 is 4W RTD temperature
+-a 9 "CONF:TEMP FRTD, (@101)\n" -n 1
+; 102 is DC volatge 100V range
+-a 9 "CONF:VOLT:DC (@102)\n" -n 1
+-a 9 "VOLT:DC:RANGE 100, (@102)\n" -n 1
+; 121 is current 1A, 10 PLC
+-a 9 "CONF:CURR:DC (@121)\n" -n 1
+-a 9 "CURR:DC:RANGE 0.1, (@121)\n" -n 1
+-a 9 "CURR:DC:NPLC 10, (@121)\n" -n 1
+; scan channels 101, 102, 121 on a read query
+-a 9 "ROUT:SCAN (@101,102,121)\n" -n 1
+; monitor channel 121, current
+-a 9 "ROUT:MON (@121)\n" -n 1
+;-a 9 "ROUT:MON (@101)\n" -n 1
+-a 9 "ROUT:MON:STAT ON\n" -n 1
+;
+; The power supply
+;
+-a 8 VSET1,12;ISET1,0.8;OCP1,1;OUT1,1\n -p 30 -f +0
+-a 8 VSET1,12;ISET1,0.8;OCP1,1;OUT1,0\n -p 30 -f +20
+;
+; the sensor
+;
+-d COM1 -s 9600,N,8,1 -r -es 0x0a -q 1000 "*0100SN\r\n" -n 1
+-d COM1 -s 9600,N,8,1 -r -es 0x0a -q 1000 "*0100VR\r\n" -n 1
+-d COM1 -s 9600,N,8,1 -r -es 0x0a -q 1000 "*0100MN\r\n" -n 1
+;
+-d COM1 -s 9600,N,8,1 "*0100P2\r\n" -p 60 -f +3
+-d COM1 -s 9600,N,8,1 "*0100Q2\r\n" -p 60 -f +33
+-d COM1 -s 9600,N,8,1 -r -es 0x0a -q 2 -f +3 -q 1000
+;-d COM1 -s 9600,N,8,1 -r -es 0x0a -q 1000 "*0100Q1\r\n" -p 2
+;
+; read the scanner every 10 seconds
+-a 9 READ?\n -r -p 10 -f +5
+;
+;
+; configure the ESPEC to ramp the temperature
+;
+-a 7 -es 0x0a "MODE, STANDBY\n" -n 1 -r
+-a 7 -es 0x0a "PRGM, END, STANDBY\n" -n 1 -r
+-a 7 -es 0x0a "PRGM DATA WRITE, PGM1, EDIT START\n" -n 1 -r
+-a 7 -es 0x0a "PRGM DATA WRITE, PGM1, STEP1, TEMP-40.0, TRAMPON, TIME3:00\n" -n 1 -r
+-a 7 -es 0x0a "PRGM DATA WRITE, PGM1, STEP2, TEMP-70.0, TRAMPON, TIME3:00\n" -n 1 -r 
+-a 7 -es 0x0a "PRGM DATA WRITE, PGM1, COUNT, A (1.2.20)\n" -n 1 -r
+-a 7 -es 0x0a "PRGM DATA WRITE, PGM1, EDIT END\n" -n 1 -r
+-a 7 -es 0x0a "MODE,RUN 1\n" -n 1 -r
+;
+; Read the fridge
+-a 7 -es 0x0a TEMP?\n -r -p 60

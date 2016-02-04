@@ -1,0 +1,23 @@
+; read HP3457 Multimeter
+
+-a 22 -n 1 -es 0x0a -r "ID?" -c
+;-a 22 -n 1 "PRESET"
+-a 22 -n 1 "DCI 1.0"
+-a 22 -n 1 "NPLC 0"
+-a 22 -n 1 "AZERO 0"
+-a 22 -n 1 "ARANGE 0"
+;-a 22 -n 1 "DISP OFF"
+;-a 22 -n 1 "LOCK ON"
+
+-a 22 -n 1 "TRIG AUTO"
+-a 22 -r -es 0x0a -l +300
+
+-F scripts/ISUS.txt
+
+;-a 22 -n 1 "MFORMAT ASCII"
+; -a 22 -n 1 "MFORMAT DINT"
+;-a 22 -n 1 "DELAY 0.1"
+;-a 22 -n 1 "MEM FIFO"
+;-a 22 -n 1 "TIMER 740e-6"
+;-a 22 -n 1 "NRDGS *,TIMER"
+;-a 22 -n 1 "TRIG SGL"

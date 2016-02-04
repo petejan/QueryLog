@@ -1,0 +1,36 @@
+; Tide Gauge temperature calibration
+;
+; GPIB 6 is the fridge
+; Scanner is GPIB 9
+;
+;
+; setup to log the comm ports on receiving characters
+-d COM1 -s 9600,N,8,1 -r -es 0x0a
+;
+; setup the scanner
+;
+-a 9 *RST\n -n 1
+-a 9 *IDN?\n -n 1 -r
+-a 9 "CONF:TEMP FRTD, (@101)\n" -n 1
+-a 9 "ROUT:SCAN (@101)\n" -n 1
+; monitor channel 101, temperature
+-a 9 "ROUT:MON (@101)\n" -n 1
+-a 9 "ROUT:MON:STAT ON\n" -n 1
+;
+; read ever second
+;
+-a 9 READ?\n -r -p 10
+;
+; fridge
+;
+; start
+-a 6 -es 0x0a R00000001 -c -r -n 1
+; set temperatures
+-a 6 -es 0x0a U10980 -c -r -n 1
+-a 6 -es 0x0a U11000 -c -r -n 1 -f +3:0:0
+-a 6 -es 0x0a U11020 -c -r -n 1 -f +6:0:0
+-a 6 -es 0x0a U11040 -c -r -n 1 -f +9:0:0
+;
+; stop the fridge
+-a 6 -es 0x0a R00000000 -c -r -n 1 -f +12:00:00
+;

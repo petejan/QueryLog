@@ -1,0 +1,56 @@
+; Fauhaber motor controller temperature test
+;
+; GPIB 6 is the fridge
+; GPIB 8 is Power supply
+; COM1 is the controller
+;
+-d COM1 -s 9600,N,8,1 -r -es 0x0a GRC\n -p 10 -q 1000 -f +10
+-d COM1 -s 9600,N,8,1 -r -es 0x0a TEM\n -p 10 -q 1000 -f +10
+-d COM1 -s 9600,N,8,1 -r -es 0x0a GN\n -p 10 -q 1000 -f +10
+;
+; setup the scanner
+-a 9 *RST\n -n 1
+-a 9 *IDN?\n -n 1 -r
+-a 9 "CONF:TEMP FRTD, (@101)\n" -n 1
+-a 9 "ROUT:SCAN (@101)\n" -n 1
+-a 9 "ROUT:MON (@101)\n" -n 1
+-a 9 "ROUT:MON:STAT ON\n" -n 1
+; for the rest of the time read every 10 sec's
+-a 9 READ?\n -r -p 60
+;
+; fridge
+;
+; start
+-a 6 -es 0x0a R00000001 -c -r -n 1
+; set temperatures
+-a 6 -es 0x0a U11200 -c -r -n 3 -p 24:00:00
+-a 6 -es 0x0a U11100 -c -r -n 3 -p 24:00:00 -f +2:0:0
+-a 6 -es 0x0a U11000 -c -r -n 3 -p 24:00:00 -f +3:0:0
+-a 6 -es 0x0a U10900 -c -r -n 3 -p 24:00:00 -f +4:0:0
+-a 6 -es 0x0a U10800 -c -r -n 3 -p 24:00:00 -f +5:0:0
+-a 6 -es 0x0a U10700 -c -r -n 3 -p 24:00:00 -f +6:0:0
+-a 6 -es 0x0a U10600 -c -r -n 3 -p 24:00:00 -f +7:0:0
+-a 6 -es 0x0a U10500 -c -r -n 3 -p 24:00:00 -f +8:0:0
+-a 6 -es 0x0a U10400 -c -r -n 3 -p 24:00:00 -f +9:0:0
+-a 6 -es 0x0a U10300 -c -r -n 3 -p 24:00:00 -f +10:0:0
+-a 6 -es 0x0a U10200 -c -r -n 3 -p 24:00:00 -f +11:0:0
+; step back up
+-a 6 -es 0x0a U10300 -c -r -n 3 -p 24:00:00 -f +13:0:0
+-a 6 -es 0x0a U10400 -c -r -n 3 -p 24:00:00 -f +14:0:0
+-a 6 -es 0x0a U10500 -c -r -n 3 -p 24:00:00 -f +15:0:0
+-a 6 -es 0x0a U10600 -c -r -n 3 -p 24:00:00 -f +16:0:0
+-a 6 -es 0x0a U10700 -c -r -n 3 -p 24:00:00 -f +17:0:0
+-a 6 -es 0x0a U10800 -c -r -n 3 -p 24:00:00 -f +18:0:0
+-a 6 -es 0x0a U10900 -c -r -n 3 -p 24:00:00 -f +19:0:0
+-a 6 -es 0x0a U11000 -c -r -n 3 -p 24:00:00 -f +20:0:0
+-a 6 -es 0x0a U11100 -c -r -n 3 -p 24:00:00 -f +21:0:0
+-a 6 -es 0x0a U11200 -c -r -n 3 -p 24:00:00 -f +22:0:0
+;
+; stop the fridge
+-a 6 -es 0x0a R00000000 -c -r -n 1 -f +96:0:0
+;
+; Setup the power supply
+-a 8 OUT1,0\n -p 24:0:0 -f +10
+-a 8 VSET1,24;ISET1,2;OCP1,0;OUT1,1\n -f +15 -p 24:0:0
+-a 8 IOUT?1\n -p 10 -r -f +22 -n 100000
+;

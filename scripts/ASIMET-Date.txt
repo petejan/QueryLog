@@ -1,0 +1,6 @@
+;-d COM1 -s 9600,N,8,1 -es 0x03 -r
+-d COM1 -s 9600,N,8,1 -es 0x03 "#\\j01A" -n 1
+-d COM1 -s 9600,N,8,1 -es 0x03 -f +1 "#\\j1\\01D%Y/%m/%d %H:%M:%S" -n 1
+-d COM1 -s 9600,N,8,1 -es 0x03 -f +2 "#\\jH" -n 1
+-d COM1 -s 9600,N,8,1 -es 0x03 -f +3 "#\\j01Q" -n 1
+-d COM1 -s 9600,N,8,1 -es 0x03 -f +10 "#\\j01L" -n 1

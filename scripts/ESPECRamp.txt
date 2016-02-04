@@ -1,0 +1,13 @@
+; configure the ESPEC to ramp the temperature
+;
+-a 7 -es 0x0a "MODE, STANDBY\n" -n 1 -r
+-a 7 -es 0x0a "PRGM, END, STANDBY\n" -n 1 -r
+-a 7 -es 0x0a "PRGM DATA WRITE, PGM1, EDIT START\n" -n 1 -r
+-a 7 -es 0x0a "PRGM DATA WRITE, PGM1, STEP1, TEMP-40.0, TRAMPON, TIME1:00\n" -n 1 -r
+-a 7 -es 0x0a "PRGM DATA WRITE, PGM1, STEP2, TEMP-60.0, TRAMPON, TIME1:00\n" -n 1 -r 
+-a 7 -es 0x0a "PRGM DATA WRITE, PGM1, COUNT, A (1.2.20)\n" -n 1 -r
+-a 7 -es 0x0a "PRGM DATA WRITE, PGM1, EDIT END\n" -n 1 -r
+;-a 7 -es 0x0a "MODE,RUN 1\n" -n 1 -r
+;
+; Read the fridge
+-a 7 -es 0x0a TEMP?\n -r -p 1

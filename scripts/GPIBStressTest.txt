@@ -1,0 +1,19 @@
+; Stree test the GPIB interface
+;
+; setup the scanner GPIB address 6,
+; setup to scan temperature, voltage and current.
+;
+-a 9 *RST;*CLS\n -n 1
+-a 9 *IDN?\n -n 1 -r
+; configure the channels
+; 101 is 4W RTD temperature
+-a 9 "CONF:TEMP FRTD, (@101)\n" -n 1
+-a 9 "ROUT:SCAN (@101)\n" -n 1
+-a 9 "ROUT:MON (@101)\n" -n 1
+-a 9 "ROUT:MON:STAT ON\n" -n 1
+-a 9 READ?\n -r
+;
+; GPIB 7 is the ESPEC fridge
+;
+; Read the fridge
+-a 7 -es 0x0a TEMP?\n -c -r

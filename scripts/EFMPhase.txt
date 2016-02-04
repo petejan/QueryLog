@@ -1,0 +1,71 @@
+; EFM phase routine
+;
+; GPIB 6 is the fridge
+; GPIB 9 is the scanning multimeter 4W RTD on channel 101
+; GPIB 8 is the DC power supply, Output 1 to EFM
+; GPIB 14 is the stanford-research high voltage PSU
+;
+-d COM1 -s 19200,N,8,1 -r -es 0x0a SER\n -f +10 -n 1 -q 1000
+-d COM1 -s 19200,N,8,1 -r -es 0x0a VER\n -f +10 -n 1 -q 1000
+-d COM1 -s 19200,N,8,1 -r -es 0x0a RO\ SER\n -f +10 -n 1 -q 1000
+-d COM1 -s 19200,N,8,1 -r -es 0x0a RO\ VER\n -f +10 -n 1 -q 1000
+-d COM1 -s 19200,N,8,1 -r -es 0x0a CLR\n -p 60 -q 1000 -f +20 -n 1
+-d COM1 -s 19200,N,8,1 -r -es 0x0a RO\ CLR\n -p 60 -q 1000 -f +20 -n 1
+;
+; poll with the ALL command, every 5 sec
+-d COM1 -s 19200,N,8,1 -r -es 0x0a ALL\n -p 5 -q 1000 -f +30 -l +1:00:00
+;
+-d COM1 -s 19200,N,8,1 -r -es 0x0a RO\ PHASE\ 5\n   -n 2 -p 20:00 -q 1000 -f  +0:30
+-d COM1 -s 19200,N,8,1 -r -es 0x0a RO\ PHASE\ 10\n  -n 2 -p 20:00 -q 1000 -f  +1:00
+-d COM1 -s 19200,N,8,1 -r -es 0x0a RO\ PHASE\ 15\n  -n 2 -p 20:00 -q 1000 -f  +1:30
+-d COM1 -s 19200,N,8,1 -r -es 0x0a RO\ PHASE\ 20\n  -n 2 -p 20:00 -q 1000 -f  +2:00
+-d COM1 -s 19200,N,8,1 -r -es 0x0a RO\ PHASE\ 25\n  -n 2 -p 20:00 -q 1000 -f  +2:30
+-d COM1 -s 19200,N,8,1 -r -es 0x0a RO\ PHASE\ 30\n  -n 2 -p 20:00 -q 1000 -f  +3:00
+-d COM1 -s 19200,N,8,1 -r -es 0x0a RO\ PHASE\ 35\n  -n 2 -p 20:00 -q 1000 -f  +3:30
+-d COM1 -s 19200,N,8,1 -r -es 0x0a RO\ PHASE\ 40\n  -n 2 -p 20:00 -q 1000 -f  +4:00
+-d COM1 -s 19200,N,8,1 -r -es 0x0a RO\ PHASE\ 45\n  -n 2 -p 20:00 -q 1000 -f  +4:30
+-d COM1 -s 19200,N,8,1 -r -es 0x0a RO\ PHASE\ 50\n  -n 2 -p 20:00 -q 1000 -f  +5:00
+-d COM1 -s 19200,N,8,1 -r -es 0x0a RO\ PHASE\ 55\n  -n 2 -p 20:00 -q 1000 -f  +5:30
+-d COM1 -s 19200,N,8,1 -r -es 0x0a RO\ PHASE\ 60\n  -n 2 -p 20:00 -q 1000 -f  +6:00
+-d COM1 -s 19200,N,8,1 -r -es 0x0a RO\ PHASE\ 65\n  -n 2 -p 20:00 -q 1000 -f  +6:30
+-d COM1 -s 19200,N,8,1 -r -es 0x0a RO\ PHASE\ 70\n  -n 2 -p 20:00 -q 1000 -f  +7:00
+-d COM1 -s 19200,N,8,1 -r -es 0x0a RO\ PHASE\ 75\n  -n 2 -p 20:00 -q 1000 -f  +7:30
+-d COM1 -s 19200,N,8,1 -r -es 0x0a RO\ PHASE\ 80\n  -n 2 -p 20:00 -q 1000 -f  +8:00
+-d COM1 -s 19200,N,8,1 -r -es 0x0a RO\ PHASE\ 85\n  -n 2 -p 20:00 -q 1000 -f  +8:30
+-d COM1 -s 19200,N,8,1 -r -es 0x0a RO\ PHASE\ 90\n  -n 2 -p 20:00 -q 1000 -f  +9:00
+-d COM1 -s 19200,N,8,1 -r -es 0x0a RO\ PHASE\ 95\n  -n 2 -p 20:00 -q 1000 -f  +9:30
+-d COM1 -s 19200,N,8,1 -r -es 0x0a RO\ PHASE\ 100\n -n 2 -p 20:00 -q 1000 -f +10:00
+-d COM1 -s 19200,N,8,1 -r -es 0x0a RO\ PHASE\ 105\n -n 2 -p 20:00 -q 1000 -f +10:30
+-d COM1 -s 19200,N,8,1 -r -es 0x0a RO\ PHASE\ 110\n -n 2 -p 20:00 -q 1000 -f +11:00
+-d COM1 -s 19200,N,8,1 -r -es 0x0a RO\ PHASE\ 115\n -n 2 -p 20:00 -q 1000 -f +11:30
+-d COM1 -s 19200,N,8,1 -r -es 0x0a RO\ PHASE\ 120\n -n 2 -p 20:00 -q 1000 -f +12:00
+-d COM1 -s 19200,N,8,1 -r -es 0x0a RO\ PHASE\ 125\n -n 2 -p 20:00 -q 1000 -f +12:30
+-d COM1 -s 19200,N,8,1 -r -es 0x0a RO\ PHASE\ 130\n -n 2 -p 20:00 -q 1000 -f +13:00
+-d COM1 -s 19200,N,8,1 -r -es 0x0a RO\ PHASE\ 135\n -n 2 -p 20:00 -q 1000 -f +13:30
+-d COM1 -s 19200,N,8,1 -r -es 0x0a RO\ PHASE\ 140\n -n 2 -p 20:00 -q 1000 -f +14:00
+-d COM1 -s 19200,N,8,1 -r -es 0x0a RO\ PHASE\ 145\n -n 2 -p 20:00 -q 1000 -f +14:30
+-d COM1 -s 19200,N,8,1 -r -es 0x0a RO\ PHASE\ 150\n -n 2 -p 20:00 -q 1000 -f +15:00
+-d COM1 -s 19200,N,8,1 -r -es 0x0a RO\ PHASE\ 155\n -n 2 -p 20:00 -q 1000 -f +15:30
+-d COM1 -s 19200,N,8,1 -r -es 0x0a RO\ PHASE\ 160\n -n 2 -p 20:00 -q 1000 -f +16:00
+-d COM1 -s 19200,N,8,1 -r -es 0x0a RO\ PHASE\ 165\n -n 2 -p 20:00 -q 1000 -f +16:30
+-d COM1 -s 19200,N,8,1 -r -es 0x0a RO\ PHASE\ 170\n -n 2 -p 20:00 -q 1000 -f +17:00
+-d COM1 -s 19200,N,8,1 -r -es 0x0a RO\ PHASE\ 175\n -n 2 -p 20:00 -q 1000 -f +17:30
+;
+; setup the scanner
+-a 9 *RST\n -n 1
+-a 9 *IDN?\n -n 1 -r
+-a 9 "CONF:TEMP FRTD, (@101)\n" -n 1
+-a 9 "ROUT:SCAN (@101)\n" -n 1
+; monitor channel 101, temperatur3
+-a 9 "ROUT:MON (@101)\n" -n 1
+-a 9 "ROUT:MON:STAT ON\n" -n 1
+; for the rest of the time read every min
+-a 9 READ?\n -r -p 1:0
+;
+; High voltage Power Supply
+-a 14 *RST\n -n 1
+-a 14 *IDN?\n -n 1 -r
+-a 14 HVON\n -n 1 -f +10
+-a 14 VOUT?\n -p 2:0 -r -n 1
+; set to fixed 350V
+-a 14 VSET350\n -n 1 -f +10

@@ -1,0 +1,63 @@
+; SIB 1 day fridge test
+;
+; setup to log the comm ports on receiving characters
+; 0x0a (\r) indicates a new line
+;
+-d COM1 -s 19200,N,8,1 -r -es 0x0a
+;
+; setup the scanner GPIB address 6,
+; setup to scan temperature, voltage and current.
+;
+-a 9 *RST;*CLS\n -n 1
+-a 9 *IDN?\n -n 1 -r
+; configure the channels
+; 101 is 4W RTD temperature
+-a 9 "CONF:TEMP FRTD, (@101)\n" -n 1
+; 120 is DC volatge 100V range
+-a 9 "CONF:VOLT:DC (@120)\n" -n 1
+-a 9 "VOLT:DC:RANGE 100, (@120)\n" -n 1
+; 121,122 is current 1A, 10 PLC
+-a 9 "CONF:CURR:DC (@121,122)\n" -n 1
+-a 9 "CURR:DC:RANGE 1, (@121,122)\n" -n 1
+-a 9 "CURR:DC:NPLC 10, (@121,122)\n" -n 1
+; scan channels 101, 120, 121, 122 on a read query
+-a 9 "ROUT:SCAN (@101,120,121, 122)\n" -n 1
+; monitor channel 121, current
+-a 9 "ROUT:MON (@121)\n" -n 1
+-a 9 "ROUT:MON:STAT ON\n" -n 1
+; read the scanner every 10 seconds
+-a 9 READ?\n -r -p 10
+;
+; GPIB 7 is the ESPEC fridge
+;
+; set a 24 hr cycle, 9 1 hr steps from +20 to -70 then back
+;
+-a 7 -es 0x0a TEMP,S20\n -r -c -r -n 1 -p 24:00:00
+-a 7 -es 0x0a TEMP,S10\n -c -r -n 1 -p 24:00:00 -f +1:0:0
+-a 7 -es 0x0a TEMP,S0\n -c -r -n 1 -p 24:00:00 -f +2:0:0
+-a 7 -es 0x0a TEMP,S-10\n -c -r -n 1 -p 24:00:00 -f +3:0:0
+-a 7 -es 0x0a TEMP,S-20\n -c -r -n 1 -p 24:00:00 -f +4:0:0
+-a 7 -es 0x0a TEMP,S-30\n -c -r -n 1 -p 24:00:00 -f +5:0:0
+-a 7 -es 0x0a TEMP,S-40\n -c -r -n 1 -p 24:00:00 -f +6:0:0
+-a 7 -es 0x0a TEMP,S-50\n -c -r -n 1 -p 24:00:00 -f +7:0:0
+-a 7 -es 0x0a TEMP,S-60\n -c -r -n 1 -p 24:00:00 -f +8:0:0
+-a 7 -es 0x0a TEMP,S-70\n -c -r -n 1 -p 24:00:00 -f +9:0:0
+; step back up in temperature
+-a 7 -es 0x0a TEMP,S-60\n -c -r -n 1 -p 24:00:00 -f +12:0:0
+-a 7 -es 0x0a TEMP,S-50\n -c -r -n 1 -p 24:00:00 -f +13:0:0
+-a 7 -es 0x0a TEMP,S-40\n -c -r -n 1 -p 24:00:00 -f +14:0:0
+-a 7 -es 0x0a TEMP,S-30\n -c -r -n 1 -p 24:00:00 -f +15:0:0
+-a 7 -es 0x0a TEMP,S-20\n -c -r -n 1 -p 24:00:00 -f +16:0:0
+-a 7 -es 0x0a TEMP,S-10\n -c -r -n 1 -p 24:00:00 -f +17:0:0
+-a 7 -es 0x0a TEMP,S0\n -c -r -n 1 -p 24:00:00 -f +18:0:0
+-a 7 -es 0x0a TEMP,S10\n -c -r -n 1 -p 24:00:00 -f +19:0:0
+-a 7 -es 0x0a TEMP,S20\n -c -r -n 1 -p 24:00:00 -f +20:0:0
+;
+; Read the fridge
+-a 7 -es 0x0a TEMP?\n -c -r -p 60 -n 1440
+;
+; stop fridge
+-a 7 -es 0x0a MODE,STANDBY\n -c -r -n 1 -f +24:0:0
+;
+; start fridge
+-a 7 -es 0x0a MODE,CONSTANT\n -c -r -n 1

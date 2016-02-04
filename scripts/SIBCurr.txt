@@ -1,0 +1,55 @@
+; SIB current day fridge test
+;
+; setup the scanner GPIB address 9,
+; setup to scan temperature, voltage and current.
+;
+-a 9 *RST;*CLS\n -n 1
+-a 9 *IDN?\n -n 1 -r
+; configure the channels
+; 101 is 4W RTD temperature
+-a 9 "CONF:TEMP FRTD, (@101)\n" -n 1
+; 119, 120 is DC volatge 100V range
+-a 9 "CONF:VOLT:DC (@119)\n" -n 1
+-a 9 "VOLT:DC:RANGE 100, (@119)\n" -n 1
+; 121,122 is current 1A, 10 PLC
+-a 9 "CONF:CURR:DC (@121,122)\n" -n 1
+-a 9 "CURR:DC:RANGE 1, (@121,122)\n" -n 1
+-a 9 "CURR:DC:NPLC 10, (@121,122)\n" -n 1
+; scan channels 101, 119, 120, 121, 122 on a read query
+-a 9 "ROUT:SCAN (@101,119,120,121, 122)\n" -n 1
+; monitor channel 120, voltage
+-a 9 "ROUT:MON (@120)\n" -n 1
+-a 9 "ROUT:MON:STAT ON\n" -n 1
+; read the scanner every 10 seconds
+-a 9 READ?\n -r -p 10
+;
+; GPIB 6 is the fridge
+;
+; set a 24 hr cycle, 9 1 hr steps from +20 to -70 then back up
+;
+-a 6 -es 0x0a U11200 -c -r -n 1 -p 12:00:00
+-a 6 -es 0x0a U11100 -c -r -n 1 -p 12:00:00 -f +0:30:0
+-a 6 -es 0x0a U11000 -c -r -n 1 -p 12:00:00 -f +1:0:0
+-a 6 -es 0x0a U10900 -c -r -n 1 -p 12:00:00 -f +1:30:0
+-a 6 -es 0x0a U10800 -c -r -n 1 -p 12:00:00 -f +2:0:0
+-a 6 -es 0x0a U10700 -c -r -n 1 -p 12:00:00 -f +2:30:0
+-a 6 -es 0x0a U10600 -c -r -n 1 -p 12:00:00 -f +3:0:0
+-a 6 -es 0x0a U10500 -c -r -n 1 -p 12:00:00 -f +3:30:0
+-a 6 -es 0x0a U10400 -c -r -n 1 -p 12:00:00 -f +4:0:0
+-a 6 -es 0x0a U10300 -c -r -n 1 -p 12:00:00 -f +4:30:0
+; step back up in temperature
+-a 6 -es 0x0a U10400 -c -r -n 1 -p 12:00:00 -f +6:0:0
+-a 6 -es 0x0a U10500 -c -r -n 1 -p 12:00:00 -f +6:30:0
+-a 6 -es 0x0a U10600 -c -r -n 1 -p 12:00:00 -f +7:0:0
+-a 6 -es 0x0a U10700 -c -r -n 1 -p 12:00:00 -f +7:30:0
+-a 6 -es 0x0a U10800 -c -r -n 1 -p 12:00:00 -f +8:0:0
+-a 6 -es 0x0a U10900 -c -r -n 1 -p 12:00:00 -f +8:30:0
+-a 6 -es 0x0a U11000 -c -r -n 1 -p 12:00:00 -f +9:0:0
+-a 6 -es 0x0a U11100 -c -r -n 1 -p 12:00:00 -f +9:30:0
+-a 6 -es 0x0a U11200 -c -r -n 1 -p 12:00:00 -f +10:0:0
+;
+; stop fridge
+-a 6 -es 0x0a R00000000 -c -r -n 1 -f +12:0:0
+;
+; start fridge
+-a 6 -es 0x0a R00000001 -c -r -n 1

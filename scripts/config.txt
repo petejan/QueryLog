@@ -1,0 +1,2 @@
+-d COM1 -n 1 -s 19200,N,8,1 -r -es 13 VER
+-d COM1 -s 19200,N,8,1 -n 10 -p +10 -r -es 0x0d SER

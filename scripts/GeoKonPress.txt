@@ -1,0 +1,26 @@
+; GeoKon vibrating wire pressure test 
+;
+; Scanner, read temperature, voltage (pressure)
+-a 9 *IDN?\n -n 1 -r
+; configure the channels
+; 101 is 4W RTD temperature
+-a 9 "CONF:TEMP FRTD, (@101)\n" -n 1
+; 102 is DC volatge 100V range
+-a 9 "CONF:VOLT:DC (@102)\n" -n 1
+-a 9 "VOLT:DC:RANGE 1, (@102)\n" -n 1
+-a 9 "VOLT:DC:NPLC 10, (@102)\n" -n 1
+; scan channels 101, 102 on a read query
+-a 9 "ROUT:SCAN (@101,102)\n" -n 1
+; monitor channel 102, current
+-a 9 "ROUT:MON (@102)\n" -n 1
+-a 9 "ROUT:MON:STAT ON\n" -n 1
+;
+; the sensor
+;
+-d COM1 -s 19200,N,8,1 -r -es 0x0a -q 1000 -m "$0001Q,CFG,5" -n 1 -q 1000
+-d COM1 -s 19200,N,8,1 -r -es 0x0a -q 1000 -m "$0001Q,TIC,0" -n 1 -q 1000
+;
+-d COM1 -s 19200,N,8,1 -r -es 0x0a "$0001Q,STG" -m -p 5 -q 1000 -f +2
+;
+; read the scanner every 5 seconds
+-a 9 READ?\n -r -p 5 -f +2

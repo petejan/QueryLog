@@ -1,0 +1,14 @@
+; Kethily is GPIB(27)
+;
+-a 27 *RST;*CLS\n -n 1
+-a 27 *IDN?\n -n 1 -r
+;-a 27 :SYST:PRE\r -n 1
+;
+-a 27 "CURR:DC:RANG\ 0.00000000001\n" -n 1
+-a 27 "CURR:NPLC\ 10\n" -n 1
+-a 27 "CURR:AVER:STAT\ ON\n" -n 1
+;
+-a 27 "SYST:ZCH\ OFF\n" -n 1
+-a 27 ":CALC1:STAT\ 0\n" -n 1
+-a 27 ":FORM:ELEM\ READ,ETEM\n" -n 1
+-a 27 "FUNC\ 'CURR:DC';:READ?\n" -r -p 10

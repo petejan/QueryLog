@@ -1,0 +1,53 @@
+; AECM Calibration Current Source Temperature Test
+;
+; setup the scanner GPIB address 6,
+; setup to scan temperature
+;
+-a 9 *RST;*CLS\n -n 1
+-a 9 *IDN?\n -n 1 -r
+; configure the channels
+; 101 is 4W RTD temperature
+-a 9 "CONF:TEMP FRTD, (@101)\n" -n 1
+; scan channels 101, on a read query
+-a 9 "ROUT:SCAN (@101)\n" -n 1
+; monitor channel 101, current
+-a 9 "ROUT:MON (@101)\n" -n 1
+-a 9 "ROUT:MON:STAT ON\n" -n 1
+; read the scanner every 10 seconds
+-a 9 READ?\n -r -p 10
+;
+; GPIB 7 is the ESPEC fridge
+;
+-a 7 -es 0x0a TEMP,S-20\n -c -r -n 1 -p 24:00:00
+-a 7 -es 0x0a TEMP,S-30\n -c -r -n 1 -p 24:00:00 -f + 8:0:0
+-a 7 -es 0x0a TEMP,S-50\n -c -r -n 1 -p 24:00:00 -f +16:0:0
+-a 7 -es 0x0a TEMP,S-80\n -c -r -n 1 -p 24:00:00 -f +24:0:0
+; step back up in temperature
+-a 7 -es 0x0a TEMP,S-50\n -c -r -n 1 -p 24:00:00 -f +32:0:0
+-a 7 -es 0x0a TEMP,S-30\n -c -r -n 1 -p 24:00:00 -f +40:0:0
+-a 7 -es 0x0a TEMP,S-20\n -c -r -n 1 -p 24:00:00 -f +48:0:0
+-a 7 -es 0x0a TEMP,S20\n  -c -r -n 1 -p 24:00:00 -f +56:0:0
+;
+; Read the fridge
+-a 7 -es 0x0a TEMP?\n -c -r -p 60 -n 1440
+;
+; stop fridge
+-a 7 -es 0x0a MODE,STANDBY\n -c -r -n 1 -f +64:0:0
+;
+; start fridge
+-a 7 -es 0x0a MODE,CONSTANT\n -c -r -n 1
+;
+;
+; Kethily is GPIB(27)
+-a 27 *RST;*CLS\n -n 1
+-a 27 *IDN?\n -n 1 -r
+;-a 27 :SYST:PRE\r -n 1
+;
+-a 27 "CURR:DC:RANG\ 0.00000000001\n" -n 1
+-a 27 "CURR:NPLC\ 10\n" -n 1
+-a 27 "CURR:AVER:STAT\ ON\n" -n 1
+;
+-a 27 "SYST:ZCH\ OFF\n" -n 1
+-a 27 ":CALC1:STAT\ 0\n" -n 1
+-a 27 ":FORM:ELEM\ READ,ETEM\n" -n 1
+-a 27 "FUNC\ 'CURR:DC';:READ?\n" -r -p 10
